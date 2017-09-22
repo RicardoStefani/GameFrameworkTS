@@ -4,25 +4,36 @@ import {TestService} from "../Service/TestService";
 
 export class GameFactory {
 
-    private static GAME_OBJETCS: iGameObject[] = [];
+    private classes: any[] = [];
 
     private constructor() {}
 
-    public static BUILD(name: string): iGameObject {
-        GameFactory.GAME_OBJETCS['TestGO'] = TestGO;
-        
-        return Reflect.construct(
-            GameFactory.GAME_OBJETCS[name],
-            GameFactory.BUILD_DEPEDENCIES([TestService])
-        );
+    public static get (): GameFactory {
+        let gameFactory = new GameFactory();
+
+        gameFactory.classes['TestGO'] = { 
+            className: TestGO,
+            dependecies: [
+                'TestService'
+            ]
+        };
+        gameFactory.classes['TestService'] = { 
+            className: TestService,
+            dependecies: []
+        };
+
+        return gameFactory;
     }
 
-    private static BUILD_DEPEDENCIES(dependencies: any[]): any[]
-    {
-        let obj: any[] = [];
-        dependencies.forEach(dependecy => {
-            obj.push(Reflect.construct(dependecy,[]));
+    public build(name: string): any {
+
+        let dependeciesNames: string[] = this.classes[name].dependecies;
+
+        let objDependencies: any[] = [];
+        dependeciesNames.forEach(dName => {
+            objDependencies.push(this.build(dName));
         });
-        return obj;
+
+        return Reflect.construct(this.classes[name].className, objDependencies);
     }
 }

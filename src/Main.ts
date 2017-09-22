@@ -13,7 +13,9 @@ class Main {
     public onCreate(): void {
         console.log('Game init...');
         GameObjectRegister.getRegisters().forEach(register => {
-            this.gamesObjects.push(GameFactory.BUILD(register));
+            let go: iGameObject = GameFactory.get().build(register);
+            // let teste = GameFactory.get().build('Test');
+            this.gamesObjects.push(go);
         });
         this.onStart();
     }
