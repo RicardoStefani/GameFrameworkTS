@@ -1,0 +1,9 @@
+{
+    "name": "gameframeworkts",
+    "version": "0.1.0",
+    "description": "Game Framework writing in Type Script to use in any games in HTML5 and Type Script",
+    "main": "Main.js",
+    "dependencies": {
+      "requirejs": "^2.3.5"
+    }
+}
