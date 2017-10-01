@@ -3,22 +3,26 @@ import {GameFactory} from "./Factory/GameFactory";
 import {iGameObject} from "./Interface/iGameObject";
 
 class Main {
-    private framesPerSecond = 30;
+    private canvas: HTMLCanvasElement;
     private gamesObjects: iGameObject[] = [];
+    private framesPerSecond: number = 30;
     private run: number;
     private run2: number;
 
-    private constructor() {}
+    private constructor(canvas: HTMLCanvasElement, framesPerSecond: number) {
+        this.canvas = canvas;
+        this.framesPerSecond = framesPerSecond;
+    }
     
-    public static create(framesPerSecond: number): void {
+    public static create(canvas: HTMLCanvasElement, width: number, height: number, framesPerSecond: number): void {
         console.log('Game init...');
-        let mainGame =  new Main();
-        mainGame.framesPerSecond = framesPerSecond;
+        canvas.width = width;
+		canvas.height = height;
+        let mainGame =  new Main(canvas, framesPerSecond);
         GameObjectRegister.getRegisters().forEach(register => {
             let go: iGameObject = GameFactory.get().build(register);
             mainGame.gamesObjects.push(go);
         });
-
         mainGame.start();
     }
 
@@ -52,4 +56,5 @@ class Main {
     }
 }
 
-Main.create(30);
+let canvas = document.querySelector( 'canvas' ) ;
+Main.create(canvas, 800, 600, 30);
