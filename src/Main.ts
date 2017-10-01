@@ -8,36 +8,38 @@ class Main {
     private run: number;
     private run2: number;
 
-    constructor() {}
+    private constructor() {}
     
-    public onCreate(): void {
+    public static create(framesPerSecond: number): void {
         console.log('Game init...');
+        let mainGame =  new Main();
+        mainGame.framesPerSecond = framesPerSecond;
         GameObjectRegister.getRegisters().forEach(register => {
             let go: iGameObject = GameFactory.get().build(register);
-            // let teste = GameFactory.get().build('Test');
-            this.gamesObjects.push(go);
+            mainGame.gamesObjects.push(go);
         });
-        this.onStart();
+
+        mainGame.start();
     }
 
-    public onStart(): void{
+    public start(): void{
         console.log("Start...");
         this.gamesObjects.forEach(gameObject => {
             gameObject.onStart();
         });
 
-        this.run = setInterval(()=>this.onUpdate(), 1000 / this.framesPerSecond);
-        this.run2 = setInterval(()=>this.onFinish(), 1000);
+        this.run = setInterval(()=>this.update(), 1000 / this.framesPerSecond);
+        this.run2 = setInterval(()=>this.finish(), 1000);
     }
 
-    public onUpdate(): void{
+    public update(): void{
         console.log("Update...");
         this.gamesObjects.forEach(gameObject => {
             gameObject.onUpdate();
         });
     }
 
-    public onFinish() {
+    public finish() {
         console.log("finish...");
         if(this.run){
             clearInterval(this.run);
@@ -50,5 +52,4 @@ class Main {
     }
 }
 
-let MainGame =  new Main();
-MainGame.onCreate();
+Main.create(30);
